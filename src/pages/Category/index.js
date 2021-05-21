@@ -48,7 +48,6 @@ export const CategoryPage = () => {
             key: 'Action',
             render: (text, record) => (
                 <Space size="middle">
-                    <Button style={{backgroundColor: 'green', color: '#fff'}}>Thêm</Button>
                     <Button style={{backgroundColor: 'orange', color: '#fff'}}>Sửa</Button>
                     <Button style={{backgroundColor: 'red', color: '#fff'}}>Xoá</Button>
                 </Space>
@@ -77,6 +76,7 @@ export const CategoryPage = () => {
                 <Spin size='large' />
             </div> :
             <div>
+                <Button style={{backgroundColor: 'green', color: '#fff', float: 'right', margin: 20}}>Thêm</Button>
                 <Table
                     className='default_table pointer_rows'
                     columns={columns}

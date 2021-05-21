@@ -1,40 +1,39 @@
 import React, {useEffect, useState} from "react";
-import moment from "moment";
 import { useSelector, useDispatch } from 'react-redux';
 import {Table, Spin, message, Input, Space, Button} from 'antd';
 import {useHistory} from "react-router-dom";
 import {LeftOutlined, RightOutlined} from '@ant-design/icons';
-import {fetchDataSearchByName, fetchProduct} from "./slice/homeSlice";
+import {fetchUser, fetchUserSearchByName} from "./slice";
 
 
-export const HomePage = () => {
+export const UserPage = () => {
     const { Search } = Input;
 
     const history = useHistory();
     const dispatch = useDispatch();
 
     const [freeWord, setFreeWord] = useState('');
-    const { listProduct, isLoading, currentPage, hasNextPage } = useSelector(state => {
+
+    const { listUser, isLoading, currentPage, hasNextPage } = useSelector(state => {
         if(freeWord) {
-            const { list, loading, hasNext, page } = state.product.productListSearch;
+            const { list, loading, hasNext, page } = state.user.userListSearch;
             return {
-                listProduct: list,
+                listUser: list,
                 isLoading: loading,
                 currentPage: page,
                 hasNextPage: hasNext,
             }
         }
-        const { list, loading, hasNext, page } = state.product.productList;
+        const { list, loading, hasNext, page } = state.user.userList;
         return {
-            listProduct: list,
+            listUser: list,
             isLoading: loading,
             currentPage: page,
             hasNextPage: hasNext,
         }
     });
 
-
-    //id, name price priceSale new sale image like dislike origin unit quantitative ingredient note description category_id out_of_product
+    //id, name price priceSale new sale image like dislike origin unit quantitative ingredient note description category_id out_of_user
     const columns = [
         {
             title: 'Id',
@@ -45,103 +44,45 @@ export const HomePage = () => {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            width: 130
+            width: 200
         },
         {
-            title: 'Price',
-            dataIndex: 'price',
-            key: 'price',
+            title: 'Nickname',
+            dataIndex: 'nickname',
+            key: 'nickname',
         },
         {
-            title: 'PriceSale',
-            dataIndex: 'priceSale',
-            key: 'priceSale',
+            title: 'Phone',
+            dataIndex: 'phone',
+            key: 'phone',
         },
         {
-            title: 'New',
-            dataIndex: 'new',
-            key: 'new',
-            render: (value) => {
-                return (
-                    value === 1 && (
-                        <p>Mới</p>
-                    )
-                )
-            }
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
         },
         {
-            title: 'Sale',
-            dataIndex: 'sale',
-            key: 'sale',
-            render: (value) => {
-                return (
-                    value === 1 && (
-                        <p>Giảm Giá</p>
-                    )
-                )
-            }
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
         },
         {
-            title: 'Out_of_product',
-            dataIndex: 'out_of_product',
-            key: 'out_of_product',
-            render: (value) => {
-                return (
-                    value === 1 && (
-                        <p>Hết Hàng</p>
-                    )
-                )
-            }
-        },
-        {
-            title: 'Image',
-            dataIndex: 'image',
-            key: 'image',
+            title: 'Avatar',
+            dataIndex: 'avatar',
+            key: 'avatar',
             render: (text, record) => {
                 return (
                     <div>
-                        <img src={record.image} style={{width: 70, height: 70}}/>
+                        <img src={record.avatar} style={{width: 100, height: 100}}/>
                     </div>
                 )
             }
-        },
-        {
-            title: 'Origin',
-            dataIndex: 'origin',
-            key: 'origin',
-        },
-        {
-            title: 'Unit',
-            dataIndex: 'unit',
-            key: 'unit',
-        },
-        {
-            title: 'Quantitative',
-            dataIndex: 'quantitative',
-            key: 'quantitative',
-        },
-        {
-            title: 'Ingredient',
-            dataIndex: 'ingredient',
-            key: 'ingredient',
-        },
-        {
-            title: 'Note',
-            dataIndex: 'note',
-            key: 'note',
-            width: 110,
-        },
-        {
-            title: 'Description',
-            dataIndex: 'description',
-            key: 'description',
         },
         {
             title: 'Action',
             key: 'Action',
             render: (text, record) => (
                 <Space size="middle">
-                    <Button style={{backgroundColor: 'orange', color: '#fff'}}>Sửa</Button>
                     <Button style={{backgroundColor: 'red', color: '#fff'}}>Xoá</Button>
                 </Space>
             )
@@ -149,18 +90,18 @@ export const HomePage = () => {
     ];
 
     useEffect(() => {
-        getProductList();
+        getuserList();
     }, [freeWord]);
 
-    const getProductList = async () => {
+    const getuserList = async () => {
         try {
             if(freeWord) {
-                return dispatch(fetchDataSearchByName({
+                return dispatch(fetchUserSearchByName({
                     keyWord: freeWord,
                     page : 1
                 }));
             }
-            return dispatch(fetchProduct({
+            return dispatch(fetchUser({
                 page : 1
             }));
         } catch (error) {
@@ -172,12 +113,12 @@ export const HomePage = () => {
         try {
             if(action === 'prev') {
                 if(freeWord) {
-                    return dispatch(fetchDataSearchByName({
+                    return dispatch(fetchUserSearchByName({
                         keyWord: freeWord,
                         page : currentPage - 1
                     }));
                 }
-                return dispatch(fetchProduct({
+                return dispatch(fetchUser({
                     page : currentPage - 1
                 }));
             }
@@ -185,12 +126,12 @@ export const HomePage = () => {
                 return;
             }
             if(freeWord) {
-                return dispatch(fetchDataSearchByName({
+                return dispatch(fetchUserSearchByName({
                     keyWord: freeWord,
                     page : currentPage + 1
                 }));
             }
-            return dispatch(fetchProduct({
+            return dispatch(fetchUser({
                 page : currentPage + 1
             }));
 
@@ -205,17 +146,16 @@ export const HomePage = () => {
     }
 
     return <div>
-        <h1 className='pt-5 pb-5 pl-5 text-lg font-medium'>Product</h1>
+        <h1 className='pt-5 pb-5 pl-5 text-lg font-medium'>User</h1>
         {isLoading ? <div className='flex items-center justify-center'>
                 <Spin size='large' />
             </div> :
             <div>
-                <Search placeholder="Tên Sản Phẩm" size="large" onPressEnter={e => onSearch(e.target.value)} onSearch={onSearch} className='mb-5' style={{maxWidth: 350}}/>
-                <Button style={{backgroundColor: 'green', color: '#fff', float: 'right', margin: 20}}>Thêm</Button>
+                <Search placeholder="Tên Người Dùng" size="large" onPressEnter={e => onSearch(e.target.value)} onSearch={onSearch} className='mb-5' style={{maxWidth: 350}}/>
                 <Table
                     className='default_table pointer_rows'
                     columns={columns}
-                    dataSource={listProduct}
+                    dataSource={listUser}
                     // onRow={(record, rowIndex) => {
                     //     return {
                     //         onClick: (event) => {

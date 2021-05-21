@@ -6,7 +6,7 @@ import {
     FileExclamationOutlined,
     PoweroffOutlined,
 } from '@ant-design/icons';
-import {useHistory} from "react-router";
+import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logout} from "../../pages/LoginPage/slice";
 
@@ -40,14 +40,17 @@ export const DefaultLayout = ({children}) => {
                 mode="inline"
                 defaultSelectedKeys={[history.location.pathname === '/' ? 'home' : pageName]}
             >
-                <Menu.Item key="home" onClick={() => history.push('/', { name: 'home' })}>
+                <Menu.Item key="home" onClick={() => history.push('/', { name: 'product' })}>
                     Product
                 </Menu.Item>
-                <Menu.Item key="notifications" onClick={() => history.push('/category', { name: 'category' })}>
+                <Menu.Item key="category" onClick={() => history.push('/category', { name: 'category' })}>
                     Category
                 </Menu.Item>
-                <Menu.Item key="report" onClick={() => history.push('/order', { name: 'report' })}>
+                <Menu.Item key="order" onClick={() => history.push('/order', { name: 'order' })}>
                     Order
+                </Menu.Item>
+                <Menu.Item key="user" onClick={() => history.push('/user', { name: 'user' })}>
+                    User
                 </Menu.Item>
             </Menu>
             <div className="flex items-center justify-center absolute bottom-9 w-full">

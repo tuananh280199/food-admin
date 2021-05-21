@@ -12,6 +12,9 @@ import {HomePage} from "./pages/HomePage";
 import {LoginPage} from "./pages/LoginPage";
 import './App.css';
 import {CategoryPage} from "./pages/Category";
+import {UserPage} from "./pages/User";
+import {OrderPage} from "./pages/Order";
+import {OrderDetailPage} from "./pages/Order/orderDetail";
 
 function App() {
     const authorize = useSelector(state => state.auth.isLoggedIn);
@@ -41,7 +44,11 @@ function App() {
         <Switch>
           <CheckLogin path="/login" exact component={LoginPage} />
           <PrivateRoute exact path='/' component={HomePage} />
+          <PrivateRoute exact path='/home' component={HomePage} />
           <PrivateRoute exact path='/category' component={CategoryPage} />
+          <PrivateRoute exact path='/user' component={UserPage} />
+          <PrivateRoute exact path='/order' component={OrderPage} />
+          <PrivateRoute exact path='/order-detail/:id' component={OrderDetailPage} />
         </Switch>
       </Router>
   );

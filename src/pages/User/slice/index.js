@@ -2,16 +2,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 // import service
+import userAPI from "../../../services/user";
 import productAPI from "../../../services/product";
 
 const initState = {
-    productList: {
+    userList: {
         loading: true,
         list: [],
         hasNext: false,
         page: 1,
     },
-    productListSearch: {
+    userListSearch: {
         loading: true,
         list: [],
         hasNext: false,
@@ -19,12 +20,12 @@ const initState = {
     }
 }
 
-export const fetchProduct = createAsyncThunk(
-    'product/fetchProduct',
+export const fetchUser = createAsyncThunk(
+    'user/fetchUser',
     async (params) => {
         const {page, isLoadMore = false} = params;
         try {
-            const result = await productAPI.getProduct(page);
+            const result = await userAPI.getUser(page);
             return {
                 result,
                 isLoadMore,
@@ -35,12 +36,12 @@ export const fetchProduct = createAsyncThunk(
     },
 );
 
-export const fetchDataSearchByName = createAsyncThunk(
-    'search/searchByName',
+export const fetchUserSearchByName = createAsyncThunk(
+    'user/searchUserByName',
     async (params) => {
         const {page, keyWord, isLoadMore = false} = params;
         try {
-            const result = await productAPI.searchProductByName(keyWord, page);
+            const result = await userAPI.searchUserByName(keyWord, page);
             return {
                 result,
                 isLoadMore,
@@ -51,34 +52,34 @@ export const fetchDataSearchByName = createAsyncThunk(
     },
 );
 
-const productSlice = createSlice({
-    name: 'product',
+const userSlice = createSlice({
+    name: 'user',
     initialState: initState,
     reducers: {
     },
     extraReducers: {
-        [fetchProduct.fulfilled]: (state, action) => {
+        [fetchUser.fulfilled]: (state, action) => {
             const {result, isLoadMore} = action.payload;
             const currentList = isLoadMore
-                ? state.productList.list.concat(result.data)
+                ? state.userList.list.concat(result.data)
                 : result.data;
             const hasNext = result.hasNext;
             const page = result.page;
-            state.productList = {
+            state.userList = {
                 list: currentList,
                 hasNext,
                 page,
                 loading: false,
             };
         },
-        [fetchDataSearchByName.fulfilled]: (state, action) => {
+        [fetchUserSearchByName.fulfilled]: (state, action) => {
             const {result, isLoadMore} = action.payload;
             const currentList = isLoadMore
-                ? state.productListSearch.list.concat(result.data)
+                ? state.userListSearch.list.concat(result.data)
                 : result.data;
             const hasNext = result.hasNext;
             const page = result.page;
-            state.productListSearch = {
+            state.userListSearch = {
                 list: currentList,
                 hasNext,
                 page,
@@ -88,4 +89,4 @@ const productSlice = createSlice({
     }
 });
 
-export default productSlice.reducer;
+export default userSlice.reducer;
