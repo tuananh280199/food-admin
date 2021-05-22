@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from "react";
 import moment from "moment";
 import { useSelector, useDispatch } from 'react-redux';
-import {Table, Spin, message, Input, Space, Button} from 'antd';
+import {Table, Spin, message, Input, Space, Button, Popconfirm} from 'antd';
 import {useHistory} from "react-router-dom";
-import {LeftOutlined, RightOutlined} from '@ant-design/icons';
-import {fetchDataSearchByName, fetchProduct} from "./slice/homeSlice";
+import {LeftOutlined, QuestionCircleOutlined, RightOutlined} from '@ant-design/icons';
+import {deleteProductItem, fetchDataSearchByName, fetchProduct} from "./slice/homeSlice";
+import categoryAPI from "../../services/category";
+import {deleteCategoryItem} from "../Category/slice";
+import productAPI from "../../services/product";
 
 
 export const HomePage = () => {
@@ -141,12 +144,28 @@ export const HomePage = () => {
             key: 'Action',
             render: (text, record) => (
                 <Space size="middle">
-                    <Button style={{backgroundColor: 'orange', color: '#fff'}}>Sửa</Button>
-                    <Button style={{backgroundColor: 'red', color: '#fff'}}>Xoá</Button>
+                    <Button style={{backgroundColor: 'orange', color: '#fff'}} onClick={() => history.push(`/update-product/${record.id}`)}>Sửa</Button>
+                    <Popconfirm title={`Bạn có thật sự muốn xoá ${text.name} ？`}
+                                icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                                onCancel={() => {}}
+                                onConfirm={() => handleDeleteProduct(record.id)}
+                    >
+                        <Button style={{backgroundColor: 'red', color: '#fff'}}>Xoá</Button>
+                    </Popconfirm>
                 </Space>
             )
         },
     ];
+
+    const handleDeleteProduct = async (id) => {
+        try {
+            await productAPI.deleteProduct(id);
+            dispatch(deleteProductItem({id}));
+            message.success('Xoá Thành Công');
+        } catch (error) {
+            message.error(error);
+        }
+    }
 
     useEffect(() => {
         getProductList();
@@ -211,7 +230,7 @@ export const HomePage = () => {
             </div> :
             <div>
                 <Search placeholder="Tên Sản Phẩm" size="large" onPressEnter={e => onSearch(e.target.value)} onSearch={onSearch} className='mb-5' style={{maxWidth: 350}}/>
-                <Button style={{backgroundColor: 'green', color: '#fff', float: 'right', margin: 20}}>Thêm</Button>
+                <Button style={{backgroundColor: 'green', color: '#fff', float: 'right', margin: 20}} onClick={() => history.push(`/add-product`)}>Thêm</Button>
                 <Table
                     className='default_table pointer_rows'
                     columns={columns}

@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import {Table, Spin, message, Space, Button} from 'antd';
+import {Table, Spin, message, Space, Button, Popconfirm} from 'antd';
 import {useHistory} from "react-router-dom";
-import {fetchCategory} from "./slice";
+import {deleteCategoryItem, fetchCategory} from "./slice";
+import categoryAPI from "../../services/category";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 
 export const CategoryPage = () => {
 
@@ -48,12 +50,28 @@ export const CategoryPage = () => {
             key: 'Action',
             render: (text, record) => (
                 <Space size="middle">
-                    <Button style={{backgroundColor: 'orange', color: '#fff'}}>Sửa</Button>
-                    <Button style={{backgroundColor: 'red', color: '#fff'}}>Xoá</Button>
+                    <Button style={{backgroundColor: 'orange', color: '#fff'}} onClick={() => history.push(`/update-category/${record.id}`)}>Sửa</Button>
+                    <Popconfirm title={`Bạn có thật sự muốn xoá ${text.name} ？`}
+                                icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                                onCancel={() => {}}
+                                onConfirm={() => handleDeleteCategory(record.id)}
+                    >
+                        <Button style={{backgroundColor: 'red', color: '#fff'}}>Xoá</Button>
+                    </Popconfirm>
                 </Space>
             )
         },
     ];
+
+    const handleDeleteCategory = async (id) => {
+        try {
+            await categoryAPI.deleteCategory(id);
+            dispatch(deleteCategoryItem({id}));
+            message.success('Xoá Thành Công');
+        } catch (error) {
+            message.error(error);
+        }
+    }
 
     useEffect(() => {
         getCategoryList();
@@ -61,9 +79,6 @@ export const CategoryPage = () => {
 
     const getCategoryList = async () => {
         try {
-            // if(freeWord) {
-            //     query.freeWord = freeWord
-            // }
             return dispatch(fetchCategory());
         } catch (error) {
             message.error(error);
@@ -76,7 +91,7 @@ export const CategoryPage = () => {
                 <Spin size='large' />
             </div> :
             <div>
-                <Button style={{backgroundColor: 'green', color: '#fff', float: 'right', margin: 20}}>Thêm</Button>
+                <Button style={{backgroundColor: 'green', color: '#fff', float: 'right', margin: 20}} onClick={() => history.push(`/add-category`)}>Thêm</Button>
                 <Table
                     className='default_table pointer_rows'
                     columns={columns}

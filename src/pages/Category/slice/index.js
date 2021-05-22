@@ -25,10 +25,15 @@ export const fetchCategory = createAsyncThunk(
     },
 );
 
-const productSlice = createSlice({
+const categorySlice = createSlice({
     name: 'category',
     initialState: initState,
     reducers: {
+        deleteCategoryItem(state, action) {
+            const {id} = action.payload;
+            const newList = state.categoryList.list.filter(item => item.id !== id);
+            state.categoryList.list = newList;
+        }
     },
     extraReducers: {
         [fetchCategory.fulfilled]: (state, action) => {
@@ -42,4 +47,8 @@ const productSlice = createSlice({
     }
 });
 
-export default productSlice.reducer;
+export const {
+    deleteCategoryItem,
+} = categorySlice.actions;
+
+export default categorySlice.reducer;

@@ -4,8 +4,8 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import { useEffect } from "react";
-import {useSelector, useDispatch} from "react-redux";
+
+import {useSelector} from "react-redux";
 
 import {DefaultLayout} from "./components/DefaultLayout";
 import {HomePage} from "./pages/HomePage";
@@ -15,6 +15,10 @@ import {CategoryPage} from "./pages/Category";
 import {UserPage} from "./pages/User";
 import {OrderPage} from "./pages/Order";
 import {OrderDetailPage} from "./pages/Order/orderDetail";
+import {AddCategory} from "./pages/Category/addCategory";
+import {UpdateCategory} from "./pages/Category/updateCategory";
+import {AddProduct} from "./pages/HomePage/addProduct";
+import {UpdateProduct} from "./pages/HomePage/updateProduct";
 
 function App() {
     const authorize = useSelector(state => state.auth.isLoggedIn);
@@ -45,7 +49,11 @@ function App() {
           <CheckLogin path="/login" exact component={LoginPage} />
           <PrivateRoute exact path='/' component={HomePage} />
           <PrivateRoute exact path='/home' component={HomePage} />
+          <PrivateRoute exact path='/add-product' component={AddProduct} />
+          <PrivateRoute exact path='/update-product/:id' component={UpdateProduct} />
           <PrivateRoute exact path='/category' component={CategoryPage} />
+          <PrivateRoute exact path='/add-category' component={AddCategory} />
+          <PrivateRoute exact path='/update-category/:id' component={UpdateCategory} />
           <PrivateRoute exact path='/user' component={UserPage} />
           <PrivateRoute exact path='/order' component={OrderPage} />
           <PrivateRoute exact path='/order-detail/:id' component={OrderDetailPage} />

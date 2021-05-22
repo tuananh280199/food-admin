@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import 'antd/dist/antd.css';
 import {Form, Input, Button, message} from 'antd';
 import categoryAPI from "../../services/category";
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
+import {useSelector} from "react-redux";
 const layout = {
     labelCol: {
         span: 4,
@@ -18,9 +19,18 @@ const validateMessages = {
 };
 /* eslint-enable no-template-curly-in-string */
 
-export const AddCategory = () => {
+export const UpdateCategory = () => {
+    const params = useParams();
     const history = useHistory();
-    const [image, setImage] = useState();
+    const { id } = params;
+    const { categoryObj } = useSelector(state => {
+        const categoryById = state.category.categoryList.list.find(item => item.id === Number(id));
+        return {
+            categoryObj: categoryById,
+        }
+    });
+    const [nameCate] = useState(categoryObj?.name || '');
+    const [image, setImage] = useState(categoryObj?.image || null);
 
     const onFinish = async (values) => {
         try {
@@ -28,8 +38,8 @@ export const AddCategory = () => {
                 name: values.name,
                 image
             }
-            await categoryAPI.addCategory(params);
-            await message.success('Thêm thành công!');
+            await categoryAPI.updateCategory(params, id);
+            await message.success('Cập nhật thành công!');
             history.goBack();
         } catch (error) {
             message.error(error);
@@ -60,9 +70,15 @@ export const AddCategory = () => {
 
     return <>
         <div>
-            <h1 className='pt-5 pb-5 pl-5 text-lg font-medium'>Add Category</h1>
+            <h1 className='pt-5 pb-5 pl-5 text-lg font-medium'>Update Category</h1>
         </div>
-        <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+        <Form
+            {...layout}
+            name="nest-messages"
+            onFinish={onFinish}
+            validateMessages={validateMessages}
+            initialValues={{ name: nameCate }}
+        >
             <Form.Item
                 name='name'
                 label="Name"
@@ -83,7 +99,7 @@ export const AddCategory = () => {
                     },
                 ]}
             >
-                <Input type="file" name="myImage" onChange={onImageChange} />
+                <Input type="file" name="myImage" onChange={onImageChange}/>
             </Form.Item>
             {image && <div style={{marginLeft: 300, marginBottom: 50}}>
                 <img src={image} style={{width: 70, height: 70}}/>

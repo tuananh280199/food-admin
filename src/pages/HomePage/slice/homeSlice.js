@@ -55,6 +55,13 @@ const productSlice = createSlice({
     name: 'product',
     initialState: initState,
     reducers: {
+        deleteProductItem(state, action) {
+            const {id} = action.payload;
+            const newList = state.productList.list.filter(item => item.id !== id);
+            state.productList.list = newList;
+            const newListSearch = state.productListSearch.list.filter(item => item.id !== id);
+            state.productListSearch.list = newListSearch;
+        }
     },
     extraReducers: {
         [fetchProduct.fulfilled]: (state, action) => {
@@ -87,5 +94,9 @@ const productSlice = createSlice({
         },
     }
 });
+
+export const {
+    deleteProductItem,
+} = productSlice.actions;
 
 export default productSlice.reducer;
