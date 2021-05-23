@@ -39,7 +39,8 @@ export const AddProduct = () => {
         }
     });
 
-    const [image, setImage] = useState();
+    const [image, setImage] = useState(null);
+    const [subImage, setSubImage] = useState([]);
     const [newProduct, setNewProduct] = useState(false);
     const [saleProduct, setSaleProduct] = useState(false);
     const [outOfProduct, setOutOfProduct] = useState(false);
@@ -76,7 +77,8 @@ export const AddProduct = () => {
                 category_id : categoryID,
                 out_of_product : outOfProduct ? 1 : 0,
             }
-            await productAPI.addProduct(params);
+            const {data} = await productAPI.addProduct(params);
+            await productAPI.addSubImage(subImage, data.insertId);
             await message.success('Thêm thành công!');
             history.goBack();
         } catch (error) {
@@ -103,6 +105,32 @@ export const AddProduct = () => {
                     setImage(data.secure_url);
                 })
                 .catch((e) => message.error('Xảy ra lỗi. Vui lòng thử lại sau !'));
+        }
+    };
+
+    const onSubImageChange = event => {
+        if (event.target.files) {
+            let data;
+            let images = [];
+            for(let i = 0; i < event.target.files.length ; i ++) {
+                 data = new FormData();
+
+                data.append('file', event.target.files[i]);
+
+                data.append('upload_preset', 'food-app');
+                // data.append('cloud_name', 'dh4nrrwvy');
+
+                fetch('https://api.cloudinary.com/v1_1/dh4nrrwvy/image/upload', {
+                    method: 'post',
+                    body: data,
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        images.push(data.secure_url);
+                    })
+                    .catch((e) => message.error('Xảy ra lỗi. Vui lòng thử lại sau !'));
+            }
+            setSubImage(images);
         }
     };
 
@@ -154,9 +182,26 @@ export const AddProduct = () => {
             >
                 <Input type="file" name="myImage" onChange={onImageChange} />
             </Form.Item>
-            {image && <div style={{marginLeft: 300, marginBottom: 50}}>
+            {image && <div style={{marginLeft: 300, marginBottom: 30}}>
                 <img src={image} style={{width: 70, height: 70}}/>
             </div>}
+            <Form.Item
+                name='multiple_image'
+                label="Sub Image"
+            >
+                <Input type="file" multiple name="myImage" onChange={onSubImageChange} />
+            </Form.Item>
+            {
+                subImage.length > 0 &&
+                <div style={{display: 'inline-flex', marginLeft: 300, marginBottom: 30}}>
+                    {subImage.map((item, index) => (
+                                <div style={{marginLeft: 10, float: "left"}} key={index}>
+                                    <img src={item} style={{width: 70, height: 70}}/>
+                                </div>
+                        ))
+                    }
+                </div>
+            }
             <Form.Item
                 name='new'
                 label="New"
@@ -240,6 +285,11 @@ export const AddProduct = () => {
             <Form.Item
                 name='category'
                 label="Category"
+                rules={[
+                    {
+                        required: true,
+                    },
+                ]}
             >
                 <Select defaultValue={'Choose category'} style={{ width: 200 }} onChange={onChangeCategory}>
                     {

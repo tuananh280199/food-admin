@@ -160,6 +160,7 @@ export const HomePage = () => {
     const handleDeleteProduct = async (id) => {
         try {
             await productAPI.deleteProduct(id);
+            await productAPI.deleteSubImage(id);
             dispatch(deleteProductItem({id}));
             message.success('Xoá Thành Công');
         } catch (error) {

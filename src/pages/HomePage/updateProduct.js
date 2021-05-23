@@ -43,6 +43,7 @@ export const UpdateProduct = () => {
 
     const [name] = useState(listProduct?.name || '');
     const [image, setImage] = useState(listProduct?.image || null);
+    const [subImage, setSubImage] = useState([]);
     const [newProduct, setNewProduct] = useState((listProduct?.new === 1 ? true : false) || false);
     const [saleProduct, setSaleProduct] = useState((listProduct?.sale === 1 ? true : false) || false);
     const [outOfProduct, setOutOfProduct] = useState( (listProduct?.out_of_product === 1 ? true : false) || false);
@@ -58,11 +59,22 @@ export const UpdateProduct = () => {
 
     useEffect(() => {
         getCategoryList();
+        getSubImage();
     }, []);
 
     const getCategoryList = async () => {
         try {
             return dispatch(fetchCategory());
+        } catch (error) {
+            message.error(error);
+        }
+    }
+
+    const getSubImage = async () => {
+        try {
+            const {data} = await productAPI.getDetailProduct(id);
+            const images = data.photos.map(item => item.image);
+            setSubImage(images);
         } catch (error) {
             message.error(error);
         }
@@ -87,6 +99,10 @@ export const UpdateProduct = () => {
                 out_of_product : outOfProduct ? 1 : 0,
             }
             await productAPI.updateProduct(params, id);
+            if(subImage.length > 0) {
+                await productAPI.deleteSubImage(id);
+                await productAPI.addSubImage(subImage, id);
+            }
             await message.success('Cập nhật thành công!');
             history.goBack();
         } catch (error) {
@@ -113,6 +129,32 @@ export const UpdateProduct = () => {
                     setImage(data.secure_url);
                 })
                 .catch((e) => message.error('Xảy ra lỗi. Vui lòng thử lại sau !'));
+        }
+    };
+
+    const onSubImageChange = event => {
+        if (event.target.files) {
+            let data;
+            let images = [];
+            for(let i = 0; i < event.target.files.length ; i ++) {
+                data = new FormData();
+
+                data.append('file', event.target.files[i]);
+
+                data.append('upload_preset', 'food-app');
+                // data.append('cloud_name', 'dh4nrrwvy');
+
+                fetch('https://api.cloudinary.com/v1_1/dh4nrrwvy/image/upload', {
+                    method: 'post',
+                    body: data,
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        images.push(data.secure_url);
+                        setSubImage(images);
+                    })
+                    .catch((e) => message.error('Xảy ra lỗi. Vui lòng thử lại sau !'));
+            }
         }
     };
 
@@ -183,9 +225,26 @@ export const UpdateProduct = () => {
             >
                 <Input type="file" name="myImage" onChange={onImageChange} />
             </Form.Item>
-            {image && <div style={{marginLeft: 300, marginBottom: 50}}>
+            {image && <div style={{marginLeft: 300, marginBottom: 30}}>
                 <img src={image} style={{width: 70, height: 70}}/>
             </div>}
+            <Form.Item
+                name='multiple_image'
+                label="Sub Image"
+            >
+                <Input type="file" multiple name="myImage" onChange={onSubImageChange} />
+            </Form.Item>
+            {
+                subImage.length > 0 &&
+                <div style={{display: 'inline-flex', marginLeft: 300, marginBottom: 30}}>
+                    {subImage.map((item, index) => (
+                        <div style={{marginLeft: 10, float: "left"}} key={index}>
+                            <img src={item} style={{width: 70, height: 70}}/>
+                        </div>
+                    ))
+                    }
+                </div>
+            }
             <Form.Item
                 name='new'
                 label="New"
@@ -269,6 +328,11 @@ export const UpdateProduct = () => {
             <Form.Item
                 name='category'
                 label="Category"
+                rules={[
+                    {
+                        required: true,
+                    },
+                ]}
             >
                 <Select defaultValue={'Choose category'} style={{ width: 200 }} onChange={onChangeCategory}>
                     {

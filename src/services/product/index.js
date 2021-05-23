@@ -13,6 +13,12 @@ const productAPI = {
         );
         return data;
     },
+    getDetailProduct: async (product_id) => {
+        const data = await axios.get(
+            `/product/get-detail-product/${product_id}`,
+        );
+        return data;
+    },
     addProduct: async (params) => {
         return await axios.post(
             "/product/add-product", {
@@ -61,7 +67,19 @@ const productAPI = {
         return await axios.delete(
             `product/delete-product/${id}`
         )
-    }
+    },
+    addSubImage: async (urlImages, product_id) => {
+        return await axios.post(
+            `/product/add-sub-image-product/${product_id}`, {
+                data : urlImages,
+            }
+        )
+    },
+    deleteSubImage: async (id) => {
+        return await axios.delete(
+            `product/delete-sub-image-product/${id}`
+        )
+    },
 };
 
 export default productAPI;

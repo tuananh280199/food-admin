@@ -85,7 +85,7 @@ export const AddCategory = () => {
             >
                 <Input type="file" name="myImage" onChange={onImageChange} />
             </Form.Item>
-            {image && <div style={{marginLeft: 300, marginBottom: 50}}>
+            {image && <div style={{marginLeft: 300, marginBottom: 30}}>
                 <img src={image} style={{width: 70, height: 70}}/>
             </div>}
             {/*<Form.Item*/}

@@ -101,28 +101,9 @@ export const UpdateCategory = () => {
             >
                 <Input type="file" name="myImage" onChange={onImageChange}/>
             </Form.Item>
-            {image && <div style={{marginLeft: 300, marginBottom: 50}}>
+            {image && <div style={{marginLeft: 300, marginBottom: 30}}>
                 <img src={image} style={{width: 70, height: 70}}/>
             </div>}
-            {/*<Form.Item*/}
-            {/*    name={['user', 'age']}*/}
-            {/*    label="Age"*/}
-            {/*    rules={[*/}
-            {/*        {*/}
-            {/*            type: 'number',*/}
-            {/*            min: 0,*/}
-            {/*            max: 99,*/}
-            {/*        },*/}
-            {/*    ]}*/}
-            {/*>*/}
-            {/*    <InputNumber />*/}
-            {/*</Form.Item>*/}
-            {/*<Form.Item name={['user', 'website']} label="Website">*/}
-            {/*    <Input />*/}
-            {/*</Form.Item>*/}
-            {/*<Form.Item name={['user', 'introduction']} label="Introduction">*/}
-            {/*    <Input.TextArea />*/}
-            {/*</Form.Item>*/}
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                 <Button type="primary" htmlType="submit">
                     Submit
