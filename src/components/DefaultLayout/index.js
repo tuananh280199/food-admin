@@ -16,7 +16,7 @@ export const DefaultLayout = ({children}) => {
     const pageName = history.location?.state?.name;
     const dispatch = useDispatch();
     const { Content, Sider } = Layout;
-    const token = useSelector(state => state.auth.token);
+    const profile = useSelector(state => state.auth.profile);
 
     const handleLogout = () => {
         try {
@@ -49,9 +49,9 @@ export const DefaultLayout = ({children}) => {
                 <Menu.Item key="order" onClick={() => history.push('/order', { name: 'order' })}>
                     Order
                 </Menu.Item>
-                <Menu.Item key="user" onClick={() => history.push('/user', { name: 'user' })}>
+                {profile?.role === 'admin' && <Menu.Item key="user" onClick={() => history.push('/user', { name: 'user' })}>
                     User
-                </Menu.Item>
+                </Menu.Item>}
             </Menu>
             <div className="flex items-center justify-center absolute bottom-9 w-full">
                 <Button icon={<PoweroffOutlined />} type="primary" block onClick={handleLogout}>

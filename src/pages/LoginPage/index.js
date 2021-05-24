@@ -12,28 +12,28 @@ export const LoginPage = () => {
     const [form] = Form.useForm();
     const [, forceUpdate] = useState({});
     let history = useHistory();
-    const [ loading, setLoading ] = useState(false);
     const authorize = useSelector(state => state.auth.isLoggedIn);
 
     const handleFinish = async (values) => {
         try {
-            setLoading(true);
             const params = {
                 username: values.username,
                 password: values.password,
             };
             const response = await authAPI.login(params);
-            await dispatch(
-                login({
-                    token: response.profile.access_token,
-                    profile: response.profile,
-                }),
-            );
-            setLoading(false);
-            history.push("/");
+            if(response.profile.role === 'admin' || response.profile.role === 'staff') {
+                await dispatch(
+                    login({
+                        token: response.profile.access_token,
+                        profile: response.profile,
+                    }),
+                );
+                history.push("/");
+            } else {
+                message.error('Tài khoản này không có quyền truy cập.');
+            }
         } catch (e) {
-            message.error(e.message);
-            setLoading(false);
+            message.error('Tài khoản hoặc mật khẩu sai. Vui lòng kiểm tra lại.');
         }
     };
 

@@ -56,6 +56,13 @@ const userSlice = createSlice({
     name: 'user',
     initialState: initState,
     reducers: {
+        deleteUserItem(state, action) {
+            const {id} = action.payload;
+            const newList = state.userList.list.filter(item => item.id !== id);
+            state.userList.list = newList;
+            const newListUser = state.userListSearch.list.filter(item => item.id !== id);
+            state.userListSearch.list = newListUser;
+        }
     },
     extraReducers: {
         [fetchUser.fulfilled]: (state, action) => {
@@ -88,5 +95,10 @@ const userSlice = createSlice({
         },
     }
 });
+
+
+export const {
+    deleteUserItem,
+} = userSlice.actions;
 
 export default userSlice.reducer;

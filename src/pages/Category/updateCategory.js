@@ -4,6 +4,7 @@ import {Form, Input, Button, message} from 'antd';
 import categoryAPI from "../../services/category";
 import {useHistory, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
+import axios from "axios";
 const layout = {
     labelCol: {
         span: 4,
@@ -31,6 +32,7 @@ export const UpdateCategory = () => {
     });
     const [nameCate] = useState(categoryObj?.name || '');
     const [image, setImage] = useState(categoryObj?.image || null);
+    const [loading, setLoading] = useState(false);
 
     const onFinish = async (values) => {
         try {
@@ -46,28 +48,26 @@ export const UpdateCategory = () => {
         }
     };
 
-    const onImageChange = event => {
-        if (event.target.files && event.target.files[0]) {
-            let img = event.target.files[0];
-            const data = new FormData();
+    const onImageChange = async event => {
+        try {
+            setLoading(true);
+            if (event.target.files && event.target.files[0]) {
+                let img = event.target.files[0];
+                const data = new FormData();
 
-            data.append('file', img);
+                data.append('file', img);
 
-            data.append('upload_preset', 'food-app');
-            // data.append('cloud_name', 'dh4nrrwvy');
+                data.append('upload_preset', 'food-app');
 
-            fetch('https://api.cloudinary.com/v1_1/dh4nrrwvy/image/upload', {
-                method: 'post',
-                body: data,
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    setImage(data.secure_url);
-                })
-                .catch((e) => message.error('Xảy ra lỗi. Vui lòng thử lại sau !'));
+                const res = await axios.post('https://api.cloudinary.com/v1_1/dh4nrrwvy/image/upload', data);
+                setImage(res.data.secure_url);
+            }
+            setLoading(false);
+        } catch (e) {
+            setLoading(false);
+            message.error(e);
         }
     };
-
     return <>
         <div>
             <h1 className='pt-5 pb-5 pl-5 text-lg font-medium'>Update Category</h1>
@@ -101,9 +101,13 @@ export const UpdateCategory = () => {
             >
                 <Input type="file" name="myImage" onChange={onImageChange}/>
             </Form.Item>
-            {image && <div style={{marginLeft: 300, marginBottom: 30}}>
-                <img src={image} style={{width: 70, height: 70}}/>
-            </div>}
+            {
+                loading ? <div style={{display: 'inline-flex', marginLeft: 300, marginBottom: 30}}>
+                    <p>Uploading...</p>
+                </div> : image && <div style={{marginLeft: 300, marginBottom: 30}}>
+                    <img src={image} style={{width: 70, height: 70}}/>
+                </div>
+            }
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                 <Button type="primary" htmlType="submit">
                     Submit

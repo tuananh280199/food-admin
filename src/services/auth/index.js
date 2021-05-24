@@ -7,6 +7,11 @@ const authAPI = {
             password: params.password,
         });
     },
+    refreshToken: (refresh_token) => {
+        return axios.post('/auth/refresh-token', {
+            refreshToken: refresh_token,
+        });
+    },
 };
 
 export default authAPI;

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import {Table, Spin, message, Input, Space, Button} from 'antd';
+import {Table, Spin, message, Input, Space, Button, Popconfirm} from 'antd';
 import {useHistory} from "react-router-dom";
-import {LeftOutlined, RightOutlined} from '@ant-design/icons';
-import {fetchUser, fetchUserSearchByName} from "./slice";
+import {LeftOutlined, QuestionCircleOutlined, RightOutlined} from '@ant-design/icons';
+import {deleteUserItem, fetchUser, fetchUserSearchByName} from "./slice";
+import userAPI from "../../services/user";
 
 
 export const UserPage = () => {
@@ -13,6 +14,8 @@ export const UserPage = () => {
     const dispatch = useDispatch();
 
     const [freeWord, setFreeWord] = useState('');
+
+    const profile = useSelector(state => state.auth.profile);
 
     const { listUser, isLoading, currentPage, hasNextPage } = useSelector(state => {
         if(freeWord) {
@@ -79,15 +82,37 @@ export const UserPage = () => {
             }
         },
         {
+            title: 'Role',
+            dataIndex: 'role',
+            key: 'role',
+        },
+        {
             title: 'Action',
             key: 'Action',
             render: (text, record) => (
                 <Space size="middle">
-                    <Button style={{backgroundColor: 'red', color: '#fff'}}>Xoá</Button>
+                    <Button style={{backgroundColor: 'orange', color: '#fff'}} onClick={() => history.push(`/update-role/${record.id}`)}>Sửa Quyền</Button>
+                    <Popconfirm title={`Bạn có thật sự muốn xoá ${text.name || ''} ko ？`}
+                                icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                                onCancel={() => {}}
+                                onConfirm={() => handleDeleteUser(record.id)}
+                    >
+                        <Button style={{backgroundColor: 'red', color: '#fff'}}>Xoá</Button>
+                    </Popconfirm>
                 </Space>
             )
         },
     ];
+
+    const handleDeleteUser = async (id) => {
+        try {
+            await userAPI.deleteUser(id);
+            dispatch(deleteUserItem({id}));
+            message.success('Xoá Thành Công');
+        } catch (error) {
+            message.error(error);
+        }
+    }
 
     useEffect(() => {
         getuserList();
@@ -143,6 +168,12 @@ export const UserPage = () => {
     const onSearch = (text) => {
         setFreeWord(text);
         // dispatch(fetchAllUsers({page: 1, freeWord: text}));
+    }
+
+    if(profile?.role !== 'admin') {
+        return (
+            <></>
+        )
     }
 
     return <div>

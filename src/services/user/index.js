@@ -13,6 +13,18 @@ const userAPI = {
         );
         return data;
     },
+    updateRole: async (role, id) => {
+        return await axios.put(
+            `/users/update-role/${id}`, {
+                role,
+            }
+        );
+    },
+    deleteUser: async (id) => {
+        return await axios.delete(
+            `users/delete-user/${id}`
+        )
+    }
 };
 
 export default userAPI;

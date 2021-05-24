@@ -5,6 +5,7 @@ import {useHistory} from "react-router-dom";
 import productAPI from "../../services/product";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchCategory} from "../Category/slice";
+import axios from "axios";
 
 const layout = {
     labelCol: {
@@ -46,6 +47,8 @@ export const AddProduct = () => {
     const [outOfProduct, setOutOfProduct] = useState(false);
     const [categoryID, setCategoryID] = useState(1);
     const [price, setPrice] = useState(1001);
+    const [loading, setLoading] = useState(false);
+    const [subLoading, setSubLoading] = useState(false);
 
     useEffect(() => {
         getCategoryList();
@@ -86,51 +89,49 @@ export const AddProduct = () => {
         }
     };
 
-    const onImageChange = event => {
-        if (event.target.files && event.target.files[0]) {
-            let img = event.target.files[0];
-            const data = new FormData();
+    const onImageChange = async event => {
+        try {
+            setLoading(true);
+            if (event.target.files && event.target.files[0]) {
+                let img = event.target.files[0];
+                const data = new FormData();
 
-            data.append('file', img);
+                data.append('file', img);
 
-            data.append('upload_preset', 'food-app');
-            // data.append('cloud_name', 'dh4nrrwvy');
+                data.append('upload_preset', 'food-app');
 
-            fetch('https://api.cloudinary.com/v1_1/dh4nrrwvy/image/upload', {
-                method: 'post',
-                body: data,
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    setImage(data.secure_url);
-                })
-                .catch((e) => message.error('Xảy ra lỗi. Vui lòng thử lại sau !'));
+                const res = await axios.post('https://api.cloudinary.com/v1_1/dh4nrrwvy/image/upload', data);
+                setImage(res.data.secure_url);
+            }
+            setLoading(false);
+        } catch (e) {
+            setLoading(false);
+            message.error(e);
         }
     };
 
-    const onSubImageChange = event => {
-        if (event.target.files) {
-            let data;
-            let images = [];
-            for(let i = 0; i < event.target.files.length ; i ++) {
-                 data = new FormData();
+    const onSubImageChange = async event => {
+        try {
+            setSubLoading(true);
+            if (event.target.files) {
+                let data;
+                let images = [];
+                for(let i = 0; i < event.target.files.length ; i ++) {
+                    data = new FormData();
 
-                data.append('file', event.target.files[i]);
+                    data.append('file', event.target.files[i]);
 
-                data.append('upload_preset', 'food-app');
-                // data.append('cloud_name', 'dh4nrrwvy');
+                    data.append('upload_preset', 'food-app');
 
-                fetch('https://api.cloudinary.com/v1_1/dh4nrrwvy/image/upload', {
-                    method: 'post',
-                    body: data,
-                })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        images.push(data.secure_url);
-                    })
-                    .catch((e) => message.error('Xảy ra lỗi. Vui lòng thử lại sau !'));
+                    const res = await axios.post('https://api.cloudinary.com/v1_1/dh4nrrwvy/image/upload',data);
+                    images.push(res.data.secure_url);
+                }
+                setSubImage(images);
             }
-            setSubImage(images);
+            setSubLoading(false);
+        } catch (e) {
+            setSubLoading(false);
+            message.error(e);
         }
     };
 
@@ -182,9 +183,13 @@ export const AddProduct = () => {
             >
                 <Input type="file" name="myImage" onChange={onImageChange} />
             </Form.Item>
-            {image && <div style={{marginLeft: 300, marginBottom: 30}}>
-                <img src={image} style={{width: 70, height: 70}}/>
-            </div>}
+            {
+                loading ? <div style={{display: 'inline-flex', marginLeft: 300, marginBottom: 30}}>
+                    <p>Uploading...</p>
+                </div> : image && <div style={{marginLeft: 300, marginBottom: 30}}>
+                    <img src={image} style={{width: 70, height: 70}}/>
+                </div>
+            }
             <Form.Item
                 name='multiple_image'
                 label="Sub Image"
@@ -192,15 +197,17 @@ export const AddProduct = () => {
                 <Input type="file" multiple name="myImage" onChange={onSubImageChange} />
             </Form.Item>
             {
-                subImage.length > 0 &&
-                <div style={{display: 'inline-flex', marginLeft: 300, marginBottom: 30}}>
-                    {subImage.map((item, index) => (
-                                <div style={{marginLeft: 10, float: "left"}} key={index}>
-                                    <img src={item} style={{width: 70, height: 70}}/>
-                                </div>
+                subLoading ? <div style={{display: 'inline-flex', marginLeft: 300, marginBottom: 30}}>
+                    <p>Uploading...</p>
+                </div> : subImage.length > 0 &&
+                    <div style={{display: 'inline-flex', marginLeft: 300, marginBottom: 30}}>
+                        {subImage.map((item, index) => (
+                            <div style={{marginLeft: 10, float: "left"}} key={index}>
+                                <img src={item} style={{width: 70, height: 70}}/>
+                            </div>
                         ))
-                    }
-                </div>
+                        }
+                    </div>
             }
             <Form.Item
                 name='new'
