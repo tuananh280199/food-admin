@@ -1,19 +1,17 @@
 import React, {useEffect, useState} from "react";
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
-import {Table, Spin, message, Input, Space, Button} from 'antd';
+import {Table, Spin, message, Space, Button} from 'antd';
 import {useHistory} from "react-router-dom";
 import {LeftOutlined, RightOutlined} from '@ant-design/icons';
 import {fetchOrder} from "./slice";
 
 
 export const OrderPage = () => {
-    const { Search } = Input;
 
     const history = useHistory();
     const dispatch = useDispatch();
 
-    const [freeWord, setFreeWord] = useState('');
     const { listOrder, isLoading, currentPage, hasNextPage } = useSelector(state => {
         const { list, loading, hasNext, page } = state.order.orderList;
         return {
@@ -69,7 +67,7 @@ export const OrderPage = () => {
             render: (text, record) => (
                 <Space size="middle">
                     <Button style={{backgroundColor: 'green', color: '#fff'}} onClick={() => history.push(`/order-detail/${record.id}`, { name: 'order' })}>Chi Tiết</Button>
-                    <Button style={{backgroundColor: 'orange', color: '#fff'}}>Sửa</Button>
+                    <Button style={{backgroundColor: 'orange', color: '#fff'}} onClick={() => history.push(`/update-status/${record.id}`)}>Sửa Trạng Thái</Button>
                 </Space>
             )
         },
@@ -81,9 +79,6 @@ export const OrderPage = () => {
 
     const getOrderList = async () => {
         try {
-            // if(freeWord) {
-            //     query.freeWord = freeWord
-            // }
             return dispatch(fetchOrder({
                 page : 1
             }));
@@ -99,29 +94,17 @@ export const OrderPage = () => {
             }
             if(action === 'prev') {
                 query.page= currentPage - 1
-                if(freeWord) {
-                    query.freeWord = freeWord
-                }
                 return dispatch(fetchOrder(query))
             }
             if (!hasNextPage) {
                 return;
             }
             query.page= currentPage + 1
-            if(freeWord) {
-                query.freeWord = freeWord
-            }
             return dispatch(fetchOrder(query))
-
         } catch (e) {
             message.error(e.message);
         }
     };
-
-    const onSearch = (text) => {
-        setFreeWord(text);
-        // dispatch(fetchAllorders({page: 1, freeWord: text}));
-    }
 
     return <div>
         <h1 className='pt-5 pb-5 pl-5 text-lg font-medium'>Order</h1>
@@ -129,7 +112,6 @@ export const OrderPage = () => {
                 <Spin size='large' />
             </div> :
             <div>
-                <Search placeholder="Tên Khách Hàng" size="large" onPressEnter={e => onSearch(e.target.value)} onSearch={onSearch} className='mb-5' style={{maxWidth: 350}}/>
                 <Table
                     className='default_table pointer_rows'
                     columns={columns}

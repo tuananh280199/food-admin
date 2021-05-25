@@ -13,6 +13,13 @@ const orderAPI = {
         );
         return data;
     },
+    updateOrderStatus: async (status, id) => {
+        return await axios.put(
+            `/order/update-status/${id}`, {
+                status,
+            }
+        );
+    },
 };
 
 export default orderAPI;

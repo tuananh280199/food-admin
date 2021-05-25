@@ -23,6 +23,7 @@ import authAPI from "./services/auth";
 import {setNewToken} from "./pages/LoginPage/slice";
 import {message} from "antd";
 import {UpdateRole} from "./pages/User/updateRole";
+import {UpdateStatus} from "./pages/Order/updateStatus";
 
 function App() {
     const dispatch = useDispatch();
@@ -84,6 +85,7 @@ function App() {
           <PrivateRoute exact path='/update-role/:id' component={UpdateRole} />
           <PrivateRoute exact path='/order' component={OrderPage} />
           <PrivateRoute exact path='/order-detail/:id' component={OrderDetailPage} />
+          <PrivateRoute exact path='/update-status/:id' component={UpdateStatus} />
         </Switch>
       </Router>
   );
