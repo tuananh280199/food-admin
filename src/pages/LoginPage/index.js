@@ -50,7 +50,7 @@ export const LoginPage = () => {
     return <div className="h-full w-full flex items-center justify-center" style={backgroundLogin}>
         <div className="w-2/6 p-6 shadow-2xl rounded-lg" style={backgroundFormLogin}>
             <div className="mt-10 text-5xl text-center font-bold text-white">WELCOME</div>
-            <div className="text-center mb-10 mt-10 text-white">DEAEL APP</div>
+            <div className="text-2xl text-center mb-10 mt-10 text-white">KHOAI KHAU</div>
             <div className="flex items-center justify-center">
                 <Form form={form} onFinish={handleFinish} className="w-72">
                     <Form.Item
