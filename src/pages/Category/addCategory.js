@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import 'antd/dist/antd.css';
-import {Form, Input, Button, message} from 'antd';
+import {Form, Input, Button, Spin, message} from 'antd';
 import categoryAPI from "../../services/category";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
@@ -23,17 +23,21 @@ export const AddCategory = () => {
     const history = useHistory();
     const [image, setImage] = useState();
     const [loading, setLoading] = useState(false);
+    const [submit, setSubmit] = useState(false);
 
     const onFinish = async (values) => {
         try {
+            setSubmit(true);
             const params = {
                 name: values.name,
                 image
             }
             await categoryAPI.addCategory(params);
             await message.success('Thêm thành công!');
+            setSubmit(false);
             history.goBack();
         } catch (error) {
+            setSubmit(false);
             message.error(error);
         }
     };
@@ -94,8 +98,8 @@ export const AddCategory = () => {
                 </div>
             }
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                <Button type="primary" htmlType="submit">
-                    Submit
+                <Button type="primary" htmlType="submit" disabled={submit}>
+                    {submit && <Spin style={{marginRight: 10}}/>} Submit
                 </Button>
                 <Button type="default" style={{marginLeft: 20}} onClick={() => history.push(`/category`)}>
                     Cancel

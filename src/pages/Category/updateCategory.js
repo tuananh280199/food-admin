@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import 'antd/dist/antd.css';
-import {Form, Input, Button, message} from 'antd';
+import {Form, Input, Button, message, Spin} from 'antd';
 import categoryAPI from "../../services/category";
 import {useHistory, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
@@ -33,17 +33,21 @@ export const UpdateCategory = () => {
     const [nameCate] = useState(categoryObj?.name || '');
     const [image, setImage] = useState(categoryObj?.image || null);
     const [loading, setLoading] = useState(false);
+    const [submit, setSubmit] = useState(false);
 
     const onFinish = async (values) => {
         try {
+            setSubmit(true);
             const params = {
                 name: values.name,
                 image
             }
             await categoryAPI.updateCategory(params, id);
             await message.success('Cập nhật thành công!');
+            setSubmit(false);
             history.goBack();
         } catch (error) {
+            setSubmit(false);
             message.error(error);
         }
     };
@@ -109,8 +113,8 @@ export const UpdateCategory = () => {
                 </div>
             }
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                <Button type="primary" htmlType="submit">
-                    Submit
+                <Button type="primary" htmlType="submit" disabled={submit}>
+                    {submit && <Spin style={{marginRight: 10}}/>} Submit
                 </Button>
                 <Button type="default" style={{marginLeft: 20}} onClick={() => history.push(`/category`)}>
                     Cancel

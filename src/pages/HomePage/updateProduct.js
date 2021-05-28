@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import 'antd/dist/antd.css';
-import {Form, Input, Button, message, Select, InputNumber} from 'antd';
+import {Form, Input, Button, message, Select, InputNumber, Spin} from 'antd';
 import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import productAPI from "../../services/product";
@@ -59,6 +59,7 @@ export const UpdateProduct = () => {
     const [description] = useState(listProduct?.description || '');
     const [loading, setLoading] = useState(false);
     const [subLoading, setSubLoading] = useState(false);
+    const [submit, setSubmit] = useState(false);
 
     useEffect(() => {
         getCategoryList();
@@ -85,6 +86,7 @@ export const UpdateProduct = () => {
 
     const onFinish = async (values) => {
         try {
+            setSubmit(true);
             const params = {
                 name : values.name,
                 price : values.price,
@@ -107,8 +109,10 @@ export const UpdateProduct = () => {
                 await productAPI.addSubImage(subImage, id);
             }
             await message.success('Cập nhật thành công!');
+            setSubmit(false);
             history.goBack();
         } catch (error) {
+            setSubmit(false);
             message.error(error);
         }
     };
@@ -355,8 +359,8 @@ export const UpdateProduct = () => {
                 <Input.TextArea rows={10} maxLength={500}/>
             </Form.Item>
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                <Button type="primary" htmlType="submit">
-                    Submit
+                <Button type="primary" htmlType="submit" disabled={submit}>
+                    {submit && <Spin style={{marginRight: 10}}/>} Submit
                 </Button>
                 <Button type="default" style={{marginLeft: 20}} onClick={() => history.push(`/home`)}>
                     Cancel
