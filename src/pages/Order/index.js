@@ -27,7 +27,7 @@ export const OrderPage = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        const listOrderByMonth = listOrder.filter(item => moment.unix(item.order_date).format('MM/YYYY').toString() === moment.unix(1620179950).format('MM/YYYY').toString());
+        const listOrderByMonth = listOrder.filter(item => moment.unix(item.order_date).format('MM/YYYY').toString() === moment.unix(new Date() / 1000).format('MM/YYYY').toString());
         const mapTimeListOrder = listOrderByMonth.map(item => {
             return {
                 ...item,
