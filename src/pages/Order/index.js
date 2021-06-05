@@ -5,7 +5,9 @@ import {Table, Spin, message, Space, Button} from 'antd';
 import {useHistory} from "react-router-dom";
 import {LeftOutlined, RightOutlined} from '@ant-design/icons';
 import {fetchOrder} from "./slice";
+import {ExportCSV} from "../../ExportCSV";
 
+const fileName = `Đơn Hàng Tháng ${moment.unix(new Date() / 1000).format('MM/YYYY')}`;
 
 export const OrderPage = () => {
 
@@ -22,6 +24,19 @@ export const OrderPage = () => {
         }
     });
 
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        const listOrderByMonth = listOrder.filter(item => moment.unix(item.order_date).format('MM/YYYY').toString() === moment.unix(1620179950).format('MM/YYYY').toString());
+        const mapTimeListOrder = listOrderByMonth.map(item => {
+            return {
+                ...item,
+                order_date: moment.unix(item.order_date).format('HH:mm DD/MM/YYYY')
+            }
+        });
+        setData(mapTimeListOrder);
+    }, []);
+
     //id, name price priceSale new sale image like dislike origin unit quantitative ingredient note description category_id out_of_order
     const columns = [
         {
@@ -36,7 +51,12 @@ export const OrderPage = () => {
             width: 200
         },
         {
-            title: 'Shipping Address',
+            title: 'Phone',
+            dataIndex: 'shipping_phone',
+            key: 'shipping_phone',
+        },
+        {
+            title: 'Address',
             dataIndex: 'shipping_address',
             key: 'shipping_address',
         },
@@ -112,6 +132,7 @@ export const OrderPage = () => {
                 <Spin size='large' />
             </div> :
             <div>
+                <ExportCSV csvData={data} fileName={fileName} />
                 <Table
                     className='default_table pointer_rows'
                     columns={columns}
