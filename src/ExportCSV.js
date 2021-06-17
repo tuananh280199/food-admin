@@ -35,7 +35,7 @@ export const ExportCSV = ({csvData, fileName}) => {
 
     return (
 
-        <Button style={{backgroundColor: 'green', color: '#fff', float: 'right', margin: 20}} onClick={(e) => exportToCSV(csvData,fileName)}>Export Order</Button>
+        <Button style={{backgroundColor: 'green', color: '#fff', float: 'right', margin: 20}} onClick={(e) => exportToCSV(csvData,fileName)}>Xuất Đơn Hàng</Button>
     )
 
 }

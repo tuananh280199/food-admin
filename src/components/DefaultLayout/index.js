@@ -46,6 +46,9 @@ export const DefaultLayout = ({children}) => {
                 <Menu.Item key="category" onClick={() => history.push('/category', { name: 'category' })}>
                     Category
                 </Menu.Item>
+                <Menu.Item key="voucher" onClick={() => history.push('/voucher', { name: 'voucher' })}>
+                    Voucher
+                </Menu.Item>
                 <Menu.Item key="order" onClick={() => history.push('/order', { name: 'order' })}>
                     Order
                 </Menu.Item>

@@ -24,6 +24,9 @@ import {setNewToken} from "./pages/LoginPage/slice";
 import {message} from "antd";
 import {UpdateRole} from "./pages/User/updateRole";
 import {UpdateStatus} from "./pages/Order/updateStatus";
+import {AddVoucher} from "./pages/Voucher/addVoucher";
+import {UpdateVoucher} from "./pages/Voucher/updateVoucher";
+import {VoucherPage} from "./pages/Voucher";
 
 function App() {
     const dispatch = useDispatch();
@@ -81,6 +84,9 @@ function App() {
           <PrivateRoute exact path='/category' component={CategoryPage} />
           <PrivateRoute exact path='/add-category' component={AddCategory} />
           <PrivateRoute exact path='/update-category/:id' component={UpdateCategory} />
+          <PrivateRoute exact path='/voucher' component={VoucherPage} />
+          <PrivateRoute exact path='/add-voucher' component={AddVoucher} />
+          <PrivateRoute exact path='/update-voucher/:id' component={UpdateVoucher} />
           <PrivateRoute exact path='/user' component={UserPage} />
           <PrivateRoute exact path='/update-role/:id' component={UpdateRole} />
           <PrivateRoute exact path='/order' component={OrderPage} />

@@ -4,13 +4,15 @@ import productReducer from '../pages/HomePage/slice/homeSlice';
 import categoryReducer from '../pages/Category/slice/index';
 import userReducer from '../pages/User/slice/index';
 import orderReducer from '../pages/Order/slice/index';
+import voucherReducer from '../pages/Voucher/slice/index';
 
 const appReducer = combineReducers({
     auth: authReducer,
     product: productReducer,
     category: categoryReducer,
     user: userReducer,
-    order: orderReducer
+    order: orderReducer,
+    voucher: voucherReducer
 });
 
 const rootReducer = (state, action) => {
