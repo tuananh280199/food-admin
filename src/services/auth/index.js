@@ -12,6 +12,11 @@ const authAPI = {
             refreshToken: refresh_token,
         });
     },
+    checkToken: (token) => {
+        return axios.post('/auth/check-token', {
+            token,
+        });
+    },
 };
 
 export default authAPI;

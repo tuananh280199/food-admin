@@ -20,11 +20,12 @@ const validateMessages = {
 };
 /* eslint-enable no-template-curly-in-string */
 
-export const UpdateStatus = () => {
+export const UpdateStatus = (props) => {
     const {Option} = Select;
     const params = useParams();
     const history = useHistory();
     const { id } = params;
+    const user_id = props.location.state?.user_id;
 
     const profile = useSelector(state => state.auth.profile);
 
@@ -41,7 +42,7 @@ export const UpdateStatus = () => {
     const onFinish = async () => {
         try {
             setSubmit(true);
-            await orderAPI.updateOrderStatus(status, id);
+            await orderAPI.updateOrderStatus(status, id, user_id);
             await message.success('Cập nhật thành công!');
             setSubmit(false);
             history.goBack();
@@ -77,7 +78,7 @@ export const UpdateStatus = () => {
                 label="Status"
             >
                 <Select defaultValue={false} style={{ width: 200 }} onChange={onChangeRole}>
-                    <Option value={'Chờ Xác Nhận'}>Chờ Xác Nhận</Option>
+                    {/*<Option value={'Chờ Xác Nhận'}>Chờ Xác Nhận</Option>*/}
                     <Option value={'Xác Nhận Đơn Hàng'}>Xác Nhận Đơn Hàng</Option>
                     <Option value={'Đang Giao Hàng'}>Đang Giao Hàng</Option>
                     <Option value={'Đã Giao'}>Đã Giao</Option>

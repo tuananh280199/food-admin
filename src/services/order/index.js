@@ -13,10 +13,11 @@ const orderAPI = {
         );
         return data;
     },
-    updateOrderStatus: async (status, id) => {
+    updateOrderStatus: async (status, id, user_id) => {
         return await axios.put(
             `/order/update-status/${id}`, {
                 status,
+                user_id
             }
         );
     },

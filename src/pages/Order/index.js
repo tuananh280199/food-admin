@@ -87,7 +87,7 @@ export const OrderPage = () => {
             render: (text, record) => (
                 <Space size="middle">
                     <Button style={{backgroundColor: 'green', color: '#fff'}} onClick={() => history.push(`/order-detail/${record.id}`, { name: 'order' })}>Chi Tiết</Button>
-                    <Button style={{backgroundColor: 'orange', color: '#fff'}} onClick={() => history.push(`/update-status/${record.id}`)}>Sửa Trạng Thái</Button>
+                    <Button style={{backgroundColor: 'orange', color: '#fff'}} onClick={() => history.push(`/update-status/${record.id}`, {user_id: record.user_id})}>Sửa Trạng Thái</Button>
                 </Space>
             )
         },
