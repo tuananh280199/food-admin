@@ -46,8 +46,8 @@ export const OrderPage = () => {
         },
         {
             title: 'Customer',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'shipping_name',
+            key: 'shipping_name',
             width: 200
         },
         {
