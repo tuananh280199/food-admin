@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import 'antd/dist/antd.css';
-import {Form, Input, Button, message, Select, Spin} from 'antd';
+import {Form, Button, message, Select, Spin} from 'antd';
 import userAPI from "../../services/user";
 import {useHistory, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";

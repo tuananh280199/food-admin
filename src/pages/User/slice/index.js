@@ -3,7 +3,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 // import service
 import userAPI from "../../../services/user";
-import productAPI from "../../../services/product";
 
 const initState = {
     userList: {

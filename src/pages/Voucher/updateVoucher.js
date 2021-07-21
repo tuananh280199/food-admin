@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import 'antd/dist/antd.css';
 import {Form, Input, Button, message, Spin, InputNumber, DatePicker, Radio} from 'antd';
 import voucherAPI from "../../services/voucher";
 import {useHistory, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
-import moment from "moment";
 
 const layout = {
     labelCol: {
@@ -33,8 +32,8 @@ export const UpdateVoucher = () => {
     });
     const optionDiscount = voucherObj?.discount_price ? 1 : voucherObj?.discount_percent ? 2 : 3;
     const [name] = useState(voucherObj?.name || '');
-    const [discountPrice, setDiscountPrice] = useState(voucherObj?.discount_price || null);
-    const [discountPercent, setDiscountPercent] = useState(voucherObj?.discount_percent || null);
+    const [discountPrice] = useState(voucherObj?.discount_price || null);
+    const [discountPercent] = useState(voucherObj?.discount_percent || null);
     const [minPriceToUse] = useState(voucherObj?.min_price_to_use || null);
     const [submit, setSubmit] = useState(false);
     const [value, setValue] = React.useState(optionDiscount);

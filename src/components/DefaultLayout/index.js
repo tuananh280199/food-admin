@@ -1,9 +1,5 @@
-import { Menu, BackTop, Button, message, Layout } from 'antd';
+import { Menu, Button, message, Layout } from 'antd';
 import {
-    UserOutlined,
-    BellOutlined,
-    WarningOutlined,
-    FileExclamationOutlined,
     PoweroffOutlined,
 } from '@ant-design/icons';
 import {useHistory} from "react-router-dom";

@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import 'antd/dist/antd.css';
-import {Form, Input, Button, message, Select, Spin} from 'antd';
-import userAPI from "../../services/user";
+import {Form, Button, message, Select, Spin} from 'antd';
 import {useHistory, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import orderAPI from "../../services/order";
+import socket from "../../SocketIO/socket";
+import {UPDATE_STATUS} from "../../SocketIO/constants";
 const layout = {
     labelCol: {
         span: 4,
@@ -43,6 +44,7 @@ export const UpdateStatus = (props) => {
         try {
             setSubmit(true);
             await orderAPI.updateOrderStatus(status, id, user_id);
+            socket.authEmit(UPDATE_STATUS, {order_id: Number(id), user_id, status})
             await message.success('Cập nhật thành công!');
             setSubmit(false);
             history.goBack();

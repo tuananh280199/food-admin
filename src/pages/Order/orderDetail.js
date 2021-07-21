@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from "react";
-import moment from 'moment';
+import React, {useEffect} from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import {Table, Spin, message, Input, Space, Button} from 'antd';
+import {Table, Spin, message} from 'antd';
 import {useParams} from "react-router-dom";
 import {fetchOrderDetail} from "./slice";
 
@@ -10,7 +9,7 @@ export const OrderDetailPage = () => {
     const dispatch = useDispatch();
     const params = useParams();
     const { id } = params;
-    
+
     const { listOrder, isLoading} = useSelector(state => {
         const { list, loading } = state.order.orderDetail;
         return {

@@ -19,9 +19,9 @@ import {AddCategory} from "./pages/Category/addCategory";
 import {UpdateCategory} from "./pages/Category/updateCategory";
 import {AddProduct} from "./pages/HomePage/addProduct";
 import {UpdateProduct} from "./pages/HomePage/updateProduct";
-import authAPI from "./services/auth";
-import {setNewToken} from "./pages/LoginPage/slice";
-import {message} from "antd";
+// import authAPI from "./services/auth";
+// import {setNewToken} from "./pages/LoginPage/slice";
+// import {message} from "antd";
 import {UpdateRole} from "./pages/User/updateRole";
 import {UpdateStatus} from "./pages/Order/updateStatus";
 import {AddVoucher} from "./pages/Voucher/addVoucher";
@@ -29,44 +29,44 @@ import {UpdateVoucher} from "./pages/Voucher/updateVoucher";
 import {VoucherPage} from "./pages/Voucher";
 
 function App() {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const authorize = useSelector(state => state.auth.isLoggedIn);
-    const token = useSelector(
-        (state) => state.auth.token,
-    );
+    // const token = useSelector(
+    //     (state) => state.auth.token,
+    // );
+    //
+    // const profile = useSelector((state) => state.auth.profile);
 
-    const profile = useSelector((state) => state.auth.profile);
 
-
-    useEffect(() => {
-        checkToken();
-    }, []);
-
-    const checkToken = async () => {
-        try {
-            await authAPI.checkToken(profile?.access_token || '');
-        } catch (e) {
-            throw e;
-        }
-    };
-
-    useEffect(() => {
-        const refresh = setTimeout(() => {
-            refreshToken();
-        }, 600000); //10 phut
-        return () => clearTimeout(refresh);
-    });
-
-    const refreshToken = async () => {
-        try {
-            if (profile?.refresh_token) {
-                const newToken = await authAPI.refreshToken(profile.refresh_token);
-                dispatch(setNewToken({newToken: newToken.token}));
-            }
-        } catch (e) {
-            message.error(e);
-        }
-    };
+    // useEffect(() => {
+    //     checkToken();
+    // }, []);
+    //
+    // const checkToken = async () => {
+    //     try {
+    //         await authAPI.checkToken(profile?.access_token || '');
+    //     } catch (e) {
+    //         throw e;
+    //     }
+    // };
+    //
+    // useEffect(() => {
+    //     const refresh = setTimeout(() => {
+    //         refreshToken();
+    //     }, 600000); //10 phut
+    //     return () => clearTimeout(refresh);
+    // });
+    //
+    // const refreshToken = async () => {
+    //     try {
+    //         if (profile?.refresh_token) {
+    //             const newToken = await authAPI.refreshToken(profile.refresh_token);
+    //             dispatch(setNewToken({newToken: newToken.token}));
+    //         }
+    //     } catch (e) {
+    //         message.error(e);
+    //     }
+    // };
 
     const CheckLogin = ({ component: Component, ...rest }) => (
         <Route
@@ -81,7 +81,7 @@ function App() {
         return (
             <Route {...rest} render={(props) => {
                 return (
-                    authorize && token !== '' ? <DefaultLayout><Component {...props} /></DefaultLayout>
+                    authorize ? <DefaultLayout><Component {...props} /></DefaultLayout>
                         : <Redirect to={{pathname: '/login'}}/>
                 )
             }

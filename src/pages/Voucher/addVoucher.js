@@ -3,7 +3,6 @@ import 'antd/dist/antd.css';
 import {Form, Input, Button, Spin, message, InputNumber, DatePicker, Radio} from 'antd';
 import {useHistory} from "react-router-dom";
 import voucherAPI from "../../services/voucher";
-import moment from "moment";
 const layout = {
     labelCol: {
         span: 4,
