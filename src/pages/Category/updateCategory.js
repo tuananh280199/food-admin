@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import 'antd/dist/antd.css';
 import {Form, Input, Button, message, Spin} from 'antd';
 import categoryAPI from "../../services/category";

@@ -35,7 +35,7 @@ export const OrderPage = () => {
             }
         });
         setData(mapTimeListOrder);
-    }, []);
+    }, [listOrder]);
 
     //id, name price priceSale new sale image like dislike origin unit quantitative ingredient note description category_id out_of_order
     const columns = [

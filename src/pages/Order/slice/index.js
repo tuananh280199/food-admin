@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 // import service
 import orderAPI from "../../../services/order";
+import {orderBy} from "lodash";
 
 const initState = {
     orderList: {
@@ -52,6 +53,15 @@ const orderSlice = createSlice({
     name: 'order',
     initialState: initState,
     reducers: {
+        addOrderSendClient(state, action) {
+            const {order} = action.payload;
+            const newOrderList = state.orderList.list.concat(order);
+            state.orderList.list = orderBy(
+                newOrderList,
+                ['id'],
+                ['desc'],
+            );
+        }
     },
     extraReducers: {
         [fetchOrder.fulfilled]: (state, action) => {
@@ -77,5 +87,9 @@ const orderSlice = createSlice({
         },
     }
 });
+
+export const {
+    addOrderSendClient,
+} = orderSlice.actions;
 
 export default orderSlice.reducer;
